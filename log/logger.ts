@@ -61,13 +61,15 @@ export class Logger {
 
         let conf = LogConf[type];
 
-        console.log("%c[%s][%s][%s]%s:%o", 
-                    conf.color, 
-                    this.getTimeStr(), 
-                    conf.title, 
-                    this.getCallStack(), 
-                    hint, 
-                    msg);
+        console.log(
+            "%c[%s][%s][%s]%s:%o", 
+            conf.color, 
+            this.getTimeStr(), 
+            conf.title, 
+            this.getCallStack(), 
+            hint, 
+            msg
+        );
     }
 
     /**
