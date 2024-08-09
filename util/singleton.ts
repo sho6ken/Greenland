@@ -1,3 +1,5 @@
+import { Logger } from "../log/logger";
+
 /**
  * 單例介面
  */
@@ -112,7 +114,7 @@ export class SingleMgr implements Singleton {
         let inst = type.inst ?? new type();
         src.set(name, inst);
 
-        console.log(`single ${name} created`);
+        Logger.trace(`single ${name} created`);
         inst.init(...params);
 
         return inst;
@@ -155,7 +157,7 @@ export class SingleMgr implements Singleton {
         elm = null;
 
         src.delete(key);
-        console.log(`free single ${key} succeed`);
+        Logger.trace(`free single ${key} succeed`);
 
         return true;
     }
