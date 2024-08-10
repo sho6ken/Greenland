@@ -5,7 +5,7 @@ import { PREVIEW } from "cc/env";
  * @summary 使用2進位制遞增編號, 1, 2, 4, 8, 16, 32...
  */
 export enum LogType {
-    Trace   = 1,  // 標準
+    Trace = 1,    // 標準
     Network = 2,  // 網路
 }
 
