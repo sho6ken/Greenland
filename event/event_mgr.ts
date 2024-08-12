@@ -1,5 +1,6 @@
 import { SingleMgr } from "../single/single_mgr";
 import { Singleton } from "../single/singleton";
+import { EventBridge } from "./event_bridge";
 import { EventType } from "./event_type";
 
 /**
@@ -28,14 +29,50 @@ export class EventMgr implements Singleton {
      * 初始化
      */
     public init(): void {
-        // TODO
+        let that = this;
+
+        // 註冊
+        EventBridge.register = function(obj: Object): void {
+            let src = EventBridge.classify.get(obj.constructor);
+
+            if (!src) {
+                console.error(`event bridge register failed, ${obj.constructor.name} not found`);
+                return;
+            }
+
+            src.forEach(elm => that.add(obj, elm.type, obj[elm.cb], elm.once));
+        };
+
+        // 註銷
+        EventBridge.unregister = function(obj: Object): void {
+            let src = EventBridge.classify.get(obj.constructor);
+
+            if (!src) {
+                console.error(`event bridge unregister failed, ${obj.constructor.name} not found`);
+                return;
+            }
+
+            src.forEach(elm => {
+                let src2 = that._events.get(elm.type);
+
+                src2 && Array.from(src2).forEach(elm2 => {
+                    elm2.obj == obj && that.remove(elm2.obj, elm.type, elm2.cb);
+                });
+            });
+        };
     }
 
     /**
      * 釋放
      */
     public free(): void {
-        // TODO
+        EventBridge.register = null;
+        EventBridge.unregister = null;
+
+        EventBridge.classify.forEach(elm => elm = []);
+        EventBridge.classify.clear();
+
+        this.clear();
     }
 
     /**
