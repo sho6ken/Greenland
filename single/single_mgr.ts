@@ -8,12 +8,12 @@ export class SingleMgr implements Singleton {
     /**
      * 實例
      */
-    private _inst: SingleMgr = null;
+    private static _inst: SingleMgr = null;
 
     /**
      * 實例
      */
-    public get inst(): SingleMgr { return this._inst || (this._inst = new SingleMgr()); }
+    public static get inst(): SingleMgr { return this._inst || (this._inst = new SingleMgr()); }
 
     /**
      * 名稱
