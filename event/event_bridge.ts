@@ -17,6 +17,13 @@ export class EventBridge {
     public static unregister: (obj: Object) => void = null;
 
     /**
+     * 觸發事件
+     * @param type 事件種類
+     * @param params 事件參數
+     */
+    public static emit: (type: EventType, ...params: any[]) => void = null;
+
+    /**
      * 紀錄各類別對應的事件
      * @param type 事件類別
      * @param cb 回調函式名稱

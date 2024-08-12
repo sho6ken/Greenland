@@ -60,6 +60,9 @@ export class EventMgr implements Singleton {
                 });
             });
         };
+
+        // 觸發
+        EventBridge.emit = this.emit;
     }
 
     /**
@@ -68,6 +71,7 @@ export class EventMgr implements Singleton {
     public free(): void {
         EventBridge.register = null;
         EventBridge.unregister = null;
+        EventBridge.emit = null;
 
         EventBridge.classify.forEach(elm => elm = []);
         EventBridge.classify.clear();
