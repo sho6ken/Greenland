@@ -1,6 +1,5 @@
 import { SingleMgr } from "../single/single_mgr";
 import { Singleton } from "../single/singleton";
-import { EventBridge } from "./event_bridge";
 import { EventType } from "./event_type";
 
 /**
@@ -26,56 +25,44 @@ export class EventMgr implements Singleton {
     private _events = new Map<EventType, { obj: Object, cb: Function, once: boolean }[]>();
 
     /**
+     * 訂閱事件
+     * @param obj 所屬類別
+     * @param type 事件種類
+     * @param cb 回調函式
+     * @param once 是否只觸發一次
+     */
+    public static on(obj: Object, type: EventType, cb: Function, once: boolean): void {
+        eventMgr.add(obj, type, cb, once);
+    }
+
+    /**
+     * 取消訂閱事件
+     * @param obj 所屬類別
+     * @param type 事件種類
+     * @param cb 回調函式
+     */
+    public static off(obj: Object, type: EventType, cb: Function): void {
+        eventMgr.remove(obj, type, cb);
+    }
+
+    /**
+     * 觸發事件
+     * @param type 事件種類
+     * @param params 事件參數
+     */
+    public static emit(type: EventType, ...params: any[]): void {
+        eventMgr.emit(type, params);
+    }
+
+    /**
      * 初始化
      */
-    public init(): void {
-        let that = this;
-
-        // 註冊
-        EventBridge.register = function(obj: Object): void {
-            let src = EventBridge.classify.get(obj.constructor);
-
-            if (!src) {
-                console.error(`event bridge register failed, ${obj.constructor.name} not found`);
-                return;
-            }
-
-            src.forEach(elm => that.add(obj, elm.type, obj[elm.cb], elm.once));
-        };
-
-        // 註銷
-        EventBridge.unregister = function(obj: Object): void {
-            let src = EventBridge.classify.get(obj.constructor);
-
-            if (!src) {
-                console.error(`event bridge unregister failed, ${obj.constructor.name} not found`);
-                return;
-            }
-
-            src.forEach(elm => {
-                let src2 = that._events.get(elm.type);
-
-                src2 && Array.from(src2).forEach(elm2 => {
-                    elm2.obj == obj && that.remove(elm2.obj, elm.type, elm2.cb);
-                });
-            });
-        };
-
-        // 觸發
-        EventBridge.emit = this.emit;
-    }
+    public init(): void {}
 
     /**
      * 釋放
      */
     public free(): void {
-        EventBridge.register = null;
-        EventBridge.unregister = null;
-        EventBridge.emit = null;
-
-        EventBridge.classify.forEach(elm => elm = []);
-        EventBridge.classify.clear();
-
         this.clear();
     }
 
@@ -164,4 +151,4 @@ export class EventMgr implements Singleton {
 /**
  * 在cocos開始前啟動事件管理
  */
-SingleMgr.inst.fetch(EventMgr);
+let eventMgr = SingleMgr.inst.fetch(EventMgr);
