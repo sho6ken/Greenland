@@ -25,6 +25,36 @@ export class EventMgr implements Singleton {
     private _events = new Map<EventType, { obj: Object, cb: Function, once: boolean }[]>();
 
     /**
+     * 訂閱事件
+     * @param obj 所屬類別
+     * @param type 事件種類
+     * @param cb 回調函式
+     * @param once 是否只觸發一次
+     */
+    public static on(obj: Object, type: EventType, cb: Function, once: boolean): void {
+        eventMgr.add(obj, type, cb, once);
+    }
+
+    /**
+     * 取消訂閱事件
+     * @param obj 所屬類別
+     * @param type 事件種類
+     * @param cb 回調函式
+     */
+    public static off(obj: Object, type: EventType, cb: Function): void {
+        eventMgr.remove(obj, type, cb);
+    }
+
+    /**
+     * 觸發事件
+     * @param type 事件種類
+     * @param params 事件參數
+     */
+    public static emit(type: EventType, ...params: any[]): void {
+        eventMgr.emit(type, params);
+    }
+
+    /**
      * 初始化
      */
     public init(): void {}
@@ -121,4 +151,4 @@ export class EventMgr implements Singleton {
 /**
  * 在cocos開始前啟動事件管理
  */
-SingleMgr.inst.fetch(EventMgr);
+let eventMgr = SingleMgr.inst.fetch(EventMgr);
