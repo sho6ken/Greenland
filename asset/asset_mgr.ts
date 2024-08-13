@@ -144,6 +144,8 @@ export class AssetMgr implements Singleton {
 
             let asset = await LocalLoader.load(<any>type, path, bundle);
             this.add(path, asset, hold);  // 正式資源
+
+            return asset as T;
         }
         catch (err) {
             this._assets.delete(path);
