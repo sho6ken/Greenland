@@ -38,11 +38,27 @@ export class SingleMgr implements Singleton {
     /**
      * 取得類別單例
      */
+    public static get<T extends Singleton>(type: SingleClass<T>): T {
+        return this.inst.get(type);
+    }
+
+    /**
+     * 取得類別單例
+     */
     public get<T extends Singleton>(type: SingleClass<T>): T {
         let src = this._container;
         let name = type.name;
 
         return src.get(name) as T;
+    }
+
+    /**
+     * 取得類別單例
+     * @param params 建構參數
+     * @summary 無實例時則會進行建構新實例
+     */
+    public static fetch<T extends Singleton>(type: SingleClass<T>, ...params: any[]): T {
+        return this.inst.fetch(type, params);
     }
 
     /**
