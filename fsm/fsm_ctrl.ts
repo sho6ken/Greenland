@@ -41,9 +41,14 @@ export class FsmCtrl<T extends Object> {
     public get running(): boolean { return this._currState != null; }
 
     /**
-     * 當前狀態執行時間
+     * 當前狀態運行時間
      */
-    public get currTtl(): number { return this._currState?.ttl ?? 0; }
+    private _currTtl: number = 0;
+
+    /**
+     * 當前狀態運行時間
+     */
+    public get currTtl(): number { return this._currTtl; }
 
     /**
      * 創建狀態機
@@ -107,6 +112,7 @@ export class FsmCtrl<T extends Object> {
      * @param dt 
      */
     public update(dt: number): void {
+        this._currTtl += dt;
         this._currState?.onUpdate(dt);
     }
 
@@ -143,7 +149,7 @@ export class FsmCtrl<T extends Object> {
      * @param id 狀態編號
      * @param params 傳遞參數
      */
-    public doChange(id: number, ...params: any[]): void {
+    private doChange(id: number, ...params: any[]): void {
         if (!this._states.has(id)) {
             console.error(`change fsm ${this.name} failed, state ${id} not found`);
             return;
@@ -155,6 +161,8 @@ export class FsmCtrl<T extends Object> {
             console.error(`change fsm ${this.name} failed, state ${id} is null`);
             return;
         }
+
+        this._currTtl = 0;
 
         this._currState?.onLeave();
         this._currState = state;

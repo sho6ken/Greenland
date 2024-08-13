@@ -15,16 +15,6 @@ export abstract class FsmState {
     protected _ctrl: FsmCtrl<any> = null;
 
     /**
-     * 運行時間
-     */
-    private _ttl: number = 0;
-
-    /**
-     * 運行時間
-     */
-    public get ttl(): number { return this._ttl; }
-
-    /**
      * 初始化
      * @param ctrl 控制器
      */
@@ -43,16 +33,12 @@ export abstract class FsmState {
      * 更新
      * @summary 當前為此狀態時才會執行
      */
-    public onUpdate(dt: number): void {
-        this._ttl += dt;
-    }
+    public onUpdate(dt: number): void {}
 
     /**
      * 進入狀態
      */
-    public onEnter(...params: any[]): void {
-        this._ttl = 0;
-    }
+    public onEnter(...params: any[]): void {}
 
     /**
      * 離開狀態
