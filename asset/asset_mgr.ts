@@ -133,7 +133,8 @@ export class AssetMgr implements Singleton {
             return await this.doLoadLocal(path) as T;
         }
 
-        console.time(path);
+        let tag = `load local asset from ${path} spend`;
+        console.time(tag);
 
         this.add(path, null, true);  // 佔位
 
@@ -151,7 +152,7 @@ export class AssetMgr implements Singleton {
             this._assets.delete(path);
         }
 
-        console.timeEnd(path);
+        console.timeEnd(tag);
     }
 
     /**
@@ -192,13 +193,14 @@ export class AssetMgr implements Singleton {
             return;
         }
 
-        console.time(name);
+        let tag = `load bundle from ${name} spend`;
+        console.time(tag);
 
         this._bundles.set(name, null);  // 佔位
         let bundle = await BundleLoader.load(name)
         this._bundles.set(name, bundle);
 
-        console.timeEnd(name);
+        console.timeEnd(tag);
     }
 
     /**
@@ -209,13 +211,14 @@ export class AssetMgr implements Singleton {
      * @param bundle 包名
      */
     public async loadFolder<T extends Asset>(type: { prototype: T }, path: string, hold: boolean = true, bundle?: string): Promise<void> {
-        console.time(path);
+        let tag = `load folder from ${path} spend`;
+        console.time(tag);
 
         bundle && await BundleLoader.load(bundle);
 
         let src = await FolderLoader.load(<any>type, path, bundle);
         src.forEach(elm => this.add(path, elm.asset, hold), this);
 
-        console.timeEnd(path);
+        console.timeEnd(tag);
     }
 }
