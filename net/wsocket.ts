@@ -75,7 +75,7 @@ export class WSocket implements NetSocket {
      * @param reason 錯誤原因
      */
     public close(code?: number, reason?: string): void {
-        console.log(`ws close by ${code}:${reason}`);
+        console.warn(`ws close by ${code}:${reason}`);
         this._socket?.close(code, reason);
     }
 }
